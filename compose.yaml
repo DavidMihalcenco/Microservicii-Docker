@@ -1,0 +1,40 @@
+services:
+  postgres:
+      container_name: postgres_service
+      image: postgres
+      restart: always
+      volumes:
+        - db-data:/var/lib/postgresql/data
+      networks:
+        - python-api
+        - db-mgmt
+      environment:
+        POSTGRES_USER: 'student'
+        POSTGRES_PASSWORD: 'stud_pass'
+        POSTGRES_DB: 'pg_db'
+
+  py-api:
+    container_name: python
+    build:
+      context: app
+    restart: always
+    ports:
+      - 6000:6000
+    networks:
+      - python-api
+
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - db-mgmt
+
+volumes:
+  db-data:
+
+networks:
+  python-api:
+  db-mgmt:
